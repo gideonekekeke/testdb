@@ -4,6 +4,7 @@ const multer = require("multer");
 const cloudinary = require("cloudinary").v2;
 const streamifier = require("streamifier");
 const userData = require("./ModelData");
+const cors = require("cors");
 const port = 5000;
 const url =
 	"mongodb+srv://shotkode:shotkode@cluster0.2kfdg.mongodb.net/vercelTestDB?retryWrites=true&w=majority";
@@ -23,6 +24,7 @@ mongoose.connect(url).then(() => {
 });
 
 app.use(express.json());
+app.use(cors());
 
 app.post("/upload", fileUpload.single("image"), async (req, res) => {
 	let streamUpload = (req) => {
@@ -51,6 +53,14 @@ app.post("/upload", fileUpload.single("image"), async (req, res) => {
 	return res.status(200).json({
 		message: "successful",
 		data: createUser,
+	});
+});
+
+app.get("/", async (req, res) => {
+	const gettingUset = await userData.find();
+	return res.status(200).json({
+		message: "successful",
+		data: gettingUset,
 	});
 });
 
